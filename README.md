@@ -1,157 +1,101 @@
-# 🚀 CoreManager.Api --- Backend RESTful (ASP.NET Core + SQL Server)
+# CoreManager.Api  
+Backend desarrollado en .NET 8 para la prueba técnica de Desarrollador JR.  
+El proyecto implementa una API REST conectada a SQL Server, manejando módulos de Clientes, Empleados y Tipos de Empleado.
 
-CoreManager.Api es un backend construido con **ASP.NET Core Web API** y
-**Entity Framework Core**, diseñado para administrar información de
-Clientes, Empleados, Tipos de Empleado y Tipos de Persianas. El proyecto
-implementa un CRUD completo para cada entidad y utiliza
-**Swagger/OpenAPI** para documentación interactiva.
+## 🚀 Tecnologías utilizadas
 
-Este backend forma parte del sistema CoreManager, pensado para
-integrarse con un frontend moderno desarrollado en React.
+- ASP.NET Core 8 (Web API)
+- Entity Framework Core
+- SQL Server
+- Swagger / OpenAPI
+- C#
 
-## 🧱 Arquitectura del Proyecto
+## 📦 Arquitectura general
 
-El proyecto está organizado siguiendo buenas prácticas, separando
-responsabilidades de forma clara:
+El proyecto sigue una estructura limpia basada en controladores (Controllers) y modelos (Models):
 
-    CoreManager.Api/
-    ├── Controllers/       → Controladores REST
-    ├── Models/            → Modelos de dominio (entidades)
-    ├── Data/              → DbContext y acceso a datos
-    ├── Program.cs         → Configuración principal
-    ├── appsettings.json   → Configuración y cadena de conexión
-    └── CoreManager.Api.csproj
+CoreManager.Api/
+ ├── Controllers/
+ ├── Models/
+ ├── Data/
+ ├── appsettings.json
+ ├── Program.cs
+ └── CoreManager.Api.http
 
-Tecnologías utilizadas:
+## 🗄 Base de Datos  
+Este backend utiliza la base de datos **CoreManagerDB** en SQL Server.
 
--   **ASP.NET Core 7**
--   **Entity Framework Core (Code First)**
--   **SQL Server**
--   **Swagger / OpenAPI**
--   **Inyección de dependencias**
--   **Programación asíncrona (async/await)**
+En este repositorio encontrarás:
 
-## 📌 Funcionalidades Principales
+### ✔ `Database/CoreManagerDB-ERD.png`
+Diagrama ERD generado desde SQL Server.
 
-El backend proporciona operaciones CRUD completas para cada módulo:
+### ✔ `Database/CoreManagerDB-Script.sql`
+Script completo para crear la base de datos, tablas y relaciones.
 
-### ✔ Clientes
+*Requieres ejecutar el query para crear la DB*
 
--   Crear, listar, editar y eliminar clientes\
--   Campos: `Id`, `Nombre`, `Direccion`
+## 📊 Modelo de Base de Datos (ERD)
 
-### ✔ Tipos de Empleado
+El sistema está compuesto por las siguientes entidades y relaciones:
 
--   Catálogo para clasificar empleados\
--   Campos: `Id`, `NombreTipo`
+- Clientes
+- TiposEmpleado
+- Empleados
+- TiposPersiana (opcional según requerimiento)
 
-### ✔ Empleados
+El diagrama muestra una relación **1:N** entre TiposEmpleado → Empleados.
 
--   Relación con Tipos de Empleado\
--   Campos: `Id`, `Nombre`, `TipoEmpleadoId`, `TipoEmpleado`
+![ERD](Database/CoreManagerDB-ERD.png)
 
-### ✔ Tipos de Persianas
+## 🛠 Instalación y configuración
 
--   Catálogo de productos\
--   Campos: `Id`, `NombreTipo`, `PrecioMetroCuadrado`
-
-Todos los controladores están basados en principios REST y devuelven
-respuestas JSON limpias y estandarizadas.
-
-## 🛢 Base de Datos
-
-Asegúrate de tener una base de datos en SQL Server llamada:
-
-    CoreManagerDB
-
-Con la siguiente cadena de conexión en `appsettings.json`:
-
-``` json
-"ConnectionStrings": {
-  "DefaultConnection": "Server=localhost;Database=CoreManagerDB;Trusted_Connection=True;TrustServerCertificate=True;"
-}
+### 1️⃣ Clonar el repositorio
 ```
-
-Si usas usuario y contraseña:
-
-``` json
-"DefaultConnection": "Server=localhost;Database=CoreManagerDB;User Id=sa;Password=TU_PASSWORD;TrustServerCertificate=True;"
-```
-
-## ▶ Cómo Ejecutar el Proyecto
-
-1.  Clona el repositorio
-
-``` bash
 git clone https://github.com/TU_USUARIO/CoreManager.Api.git
 ```
 
-2.  Entra al directorio
+### 2️⃣ Configurar la base de datos
 
-``` bash
-cd CoreManager.Api
+1. Abrir SQL Server Management Studio (SSMS)
+2. Crear la base ejecutando el archivo:
+
+Database/CoreManagerDB-Script.sql
+
+3. Verificar que la base **CoreManagerDB** fue creada correctamente.
+
+## 🔧 Configurar la cadena de conexión
+
+Editar appsettings.json:
+
+```
+"ConnectionStrings": {
+  "DefaultConnection": "Server=TU_SERVIDOR;Database=CoreManagerDB;Trusted_Connection=True;TrustServerCertificate=True;"
+}
 ```
 
-3.  Restaura dependencias
+Reemplazar TU_SERVIDOR por tu instancia local.
 
-``` bash
-dotnet restore
+## ▶ Ejecutar la API
+
 ```
-
-4.  Ejecuta la API
-
-``` bash
 dotnet run
 ```
 
-## 📖 Documentación con Swagger
+Abrir Swagger:
 
-Una vez que el proyecto está corriendo, abre:
+https://localhost:7153/swagger/index.html
 
-    https://localhost:{puerto}/swagger/index.html
+## 📡 Conexión con el Frontend
 
-Desde ahí puedes probar cada endpoint sin herramientas externas.
+Este backend está diseñado para integrarse con:
 
-## 🔗 Relación entre entidades
+CoreManager.Web (React)
 
-    TiposEmpleado (1) ------ (N) Empleados
-    TiposPersiana ---------- Catálogo independiente
-    Clientes ---------------- Entidad independiente
+Asegúrate de tener el backend ejecutándose antes del frontend.
 
-Los modelos fueron diseñados para ser consumidos fácilmente desde un
-frontend moderno en React.
+## 📄 Licencia
+Uso académico para la prueba técnica.
 
-## 🧪 Ejemplo de Request (Empleado)
-
-### POST /api/Empleados
-
-``` json
-{
-  "nombre": "Juan Pérez",
-  "tipoEmpleadoId": 1
-}
-```
-
-Respuesta:
-
-``` json
-{
-  "id": 5,
-  "nombre": "Juan Pérez",
-  "tipoEmpleadoId": 1,
-  "tipoEmpleado": null
-}
-```
-
-## ✨ Objetivo del Proyecto
-
-Este backend representa una solución profesional para una prueba
-técnica, implementando:
-
--   Arquitectura ordenada\
--   CRUD completo\
--   Buenas prácticas REST\
--   Base sólida para un frontend
-
-El repositorio acompaña a un proyecto React independiente que consume
-esta API.
+## 👨‍💻 Autor
+RICARDO SAUCEDO
