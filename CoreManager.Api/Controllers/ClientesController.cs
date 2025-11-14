@@ -31,5 +31,19 @@ namespace CoreManager.Api.Controllers
 
             return CreatedAtAction(nameof(GetClientes), new { id = cliente.Id }, cliente);
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCliente(int id)
+        {
+            var cliente = await _context.Clientes.FindAsync(id);
+            if (cliente == null)
+                return NotFound();
+
+            _context.Clientes.Remove(cliente);
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
     }
 }
